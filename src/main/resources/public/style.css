@@ -12,6 +12,8 @@
     --indigo: #5856d6;
     --green: #34c759;
     --yellow: #ffcc00;
+    --red: #ff3b30;
+    --purple: #af52de;
     --switch-bg: #e9e9ea;
     --switch-active: #34c759;
 }
@@ -26,7 +28,7 @@ body {
     transition: background-color 0.5s ease;
 }
 
-/* Dark Mode Overrides (used dynamically via JS) */
+/* Dark Mode Overrides */
 body.dark-mode {
     --bg-color: #000000;
     --text-primary: #ffffff;
@@ -95,16 +97,20 @@ h2 {
     box-shadow: inset 0 0 0 2px rgba(0, 122, 255, 0.5); /* Highlight outline */
 }
 
-/* Light Card Specifics */
-.light-card.active-state {
+/* Accessory Card Specifics */
+.accessory-card.active-state {
     background-color: var(--card-bg);
-    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
 }
 
-.light-card.active-state .icon-wrapper {
-    background-color: var(--yellow);
-    color: white;
-}
+.acc-light.active-state { box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3); }
+.acc-washingmachine.active-state { box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
+.acc-kitchen.active-state { box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3); }
+.acc-door.active-state { box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
+
+.acc-light.active-state .icon-wrapper { background-color: var(--yellow); color: white; }
+.acc-washingmachine.active-state .icon-wrapper { background-color: var(--blue); color: white; }
+.acc-kitchen.active-state .icon-wrapper { background-color: var(--red); color: white; }
+.acc-door.active-state .icon-wrapper { background-color: var(--green); color: white; }
 
 .icon-wrapper {
     width: 36px;

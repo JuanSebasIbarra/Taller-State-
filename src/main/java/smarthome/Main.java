@@ -28,26 +28,35 @@ public class Main {
         server.createContext("/api/setHome", exchange -> handleStateChange(exchange, () -> {
             smartHome.setHomeMode();
             smartHome.getLightController().setAllLights(true); // Turn all on in home mode
+            smartHome.getLightController().setDoorState(false); // unlock doors
         }));
         server.createContext("/api/setAway", exchange -> handleStateChange(exchange, () -> {
             smartHome.setAwayMode();
-            smartHome.getLightController().setAllLights(false); // Turn all off in away mode
+            smartHome.getLightController().setAllOfType("Light", false); 
+            smartHome.getLightController().setAllOfType("Kitchen", false); 
+            smartHome.getLightController().setAllOfType("WashingMachine", false); 
+            smartHome.getLightController().setDoorState(true); // lock doors
         }));
         server.createContext("/api/setNight", exchange -> handleStateChange(exchange, () -> {
             smartHome.setNightMode();
-            smartHome.getLightController().setAllLights(false); // Default off
+            smartHome.getLightController().setAllOfType("Light", false); 
+            smartHome.getLightController().setAllOfType("Kitchen", false); 
             smartHome.getLightController().setRoomLights("Bedroom", true); // Leave bedroom light
             smartHome.getLightController().setRoomLights("Outside", true); // Outside lights on
+            smartHome.getLightController().setDoorState(true); // lock doors
         }));
         server.createContext("/api/setVacation", exchange -> handleStateChange(exchange, () -> {
             smartHome.setVacationMode();
-            smartHome.getLightController().setAllLights(false);
+            smartHome.getLightController().setAllOfType("Light", false);
             smartHome.getLightController().setRoomLights("Living Room", true); // Simulate presence
+            smartHome.getLightController().setAllOfType("Kitchen", false); 
+            smartHome.getLightController().setAllOfType("WashingMachine", false); 
+            smartHome.getLightController().setDoorState(true); // lock doors
         }));
 
-        // Light API Endpoints
-        server.createContext("/api/lights", new LightsHandler(smartHome.getLightController()));
-        server.createContext("/api/lights/toggle", new LightToggleHandler(smartHome.getLightController()));
+        // Accessory API Endpoints
+        server.createContext("/api/accessories", new AccessoriesHandler(smartHome.getLightController()));
+        server.createContext("/api/accessories/toggle", new AccessoryToggleHandler(smartHome.getLightController()));
 
         server.setExecutor(null); // creates a default executor
         System.out.println("Starting Smart Home Dashboard...");
@@ -77,37 +86,38 @@ public class Main {
         }
     }
     
-    // Handles CRUD for lights
-    static class LightsHandler implements HttpHandler {
+    // Handles CRUD for accessories
+    static class AccessoriesHandler implements HttpHandler {
         private LightController controller;
 
-        public LightsHandler(LightController controller) {
+        public AccessoriesHandler(LightController controller) {
             this.controller = controller;
         }
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if ("GET".equals(exchange.getRequestMethod())) {
-                String response = controller.getAllLightsAsJson();
+                String response = controller.getAllAccessoriesAsJson();
                 sendJsonResponse(exchange, response);
             } else if ("POST".equals(exchange.getRequestMethod())) {
-                // Add a light
+                // Add an accessory
                 String body = getRequestBody(exchange);
+                String type = extractJsonValue(body, "type");
                 String room = extractJsonValue(body, "room");
                 String name = extractJsonValue(body, "name");
                 
-                if (room != null && name != null) {
-                    controller.addLight(room, name);
+                if (type != null && room != null && name != null) {
+                    controller.addAccessory(type, room, name);
                     sendJsonResponse(exchange, "{\"status\": \"success\"}");
                 } else {
                     exchange.sendResponseHeaders(400, -1); // Bad Request
                 }
             } else if ("DELETE".equals(exchange.getRequestMethod())) {
-                // Remove a light
+                // Remove an accessory
                 String body = getRequestBody(exchange);
                 String id = extractJsonValue(body, "id");
                 
-                if (id != null && controller.removeLight(id)) {
+                if (id != null && controller.removeAccessory(id)) {
                     sendJsonResponse(exchange, "{\"status\": \"success\"}");
                 } else {
                     exchange.sendResponseHeaders(404, -1); // Not Found
@@ -118,11 +128,11 @@ public class Main {
         }
     }
 
-    // Handles toggling a single light
-    static class LightToggleHandler implements HttpHandler {
+    // Handles toggling a single accessory
+    static class AccessoryToggleHandler implements HttpHandler {
         private LightController controller;
 
-        public LightToggleHandler(LightController controller) {
+        public AccessoryToggleHandler(LightController controller) {
             this.controller = controller;
         }
 
@@ -135,7 +145,7 @@ public class Main {
                 
                 if (id != null && stateStr != null) {
                     boolean state = Boolean.parseBoolean(stateStr);
-                    if (controller.toggleLight(id, state)) {
+                    if (controller.toggleAccessory(id, state)) {
                         sendJsonResponse(exchange, "{\"status\": \"success\"}");
                         return;
                     }

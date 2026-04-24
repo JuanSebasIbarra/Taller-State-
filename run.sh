@@ -7,6 +7,9 @@ echo "======================================"
 echo " Building Smart Home - State Pattern  "
 echo "======================================"
 
+# Clean up previously compiled classes to prevent duplication issues
+rm -rf out/*
+
 echo "[1/2] Compiling Java classes..."
 javac -d out $(find src/main/java -name "*.java")
 

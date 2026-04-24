@@ -35,15 +35,15 @@
             </div>
         </section>
 
-        <!-- New section for Lights -->
+        <!-- Section for Accessories -->
         <section class="lights-section" style="margin-top: 40px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2>Accessories</h2>
-                <button class="add-btn" onclick="openAddLightModal()">+</button>
+                <button class="add-btn" onclick="openAddAccessoryModal()">+</button>
             </div>
 
             <!-- This container will be populated by JavaScript -->
-            <div id="lights-grid" class="grid accessories-grid">
+            <div id="accessories-grid" class="grid accessories-grid">
                 <p class="status-summary">Loading accessories...</p>
             </div>
         </section>
@@ -87,25 +87,60 @@
         </div>
     </div>
 
-    <!-- Add Light Modal -->
-    <div id="add-light-modal" class="modal-overlay hidden">
+    <!-- Add Accessory Modal -->
+    <div id="add-accessory-modal" class="modal-overlay hidden">
         <div class="modal">
             <div class="modal-header">
-                <div class="modal-icon">💡</div>
+                <div class="modal-icon">➕</div>
                 <h2>Add Accessory</h2>
             </div>
             <div class="modal-body">
-                <p class="status-summary" style="text-align: center; margin-bottom: 20px;">Add a new smart light to a room.</p>
+                <p class="status-summary" style="text-align: center; margin-bottom: 20px;">Add a new smart accessory.</p>
                 <div class="form-group">
-                    <input type="text" id="new-light-room" placeholder="Room (e.g., Living Room)" class="input-field">
+                    <select id="new-acc-type" class="input-field" style="appearance: none;">
+                        <option value="Light">💡 Light</option>
+                        <option value="WashingMachine">🧺 Washing Machine</option>
+                        <option value="Kitchen">🍳 Kitchen Appliance</option>
+                        <option value="Door">🚪 Smart Door</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <input type="text" id="new-light-name" placeholder="Name (e.g., Ceiling Light)" class="input-field">
+                    <input type="text" id="new-acc-room" placeholder="Room (e.g., Living Room)" class="input-field">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="new-acc-name" placeholder="Name (e.g., Main Door)" class="input-field">
                 </div>
             </div>
             <div class="modal-footer" style="display: flex; gap: 10px;">
-                <button class="btn-secondary" style="flex: 1;" onclick="closeAddLightModal()">Cancel</button>
-                <button class="btn-primary" style="flex: 1;" onclick="submitNewLight()">Add</button>
+                <button class="btn-secondary" style="flex: 1;" onclick="closeAddAccessoryModal()">Cancel</button>
+                <button class="btn-primary" style="flex: 1;" onclick="submitNewAccessory()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle Accessory Modal -->
+    <div id="toggle-accessory-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header" style="margin-bottom: 10px;">
+                <div class="modal-icon" id="toggle-acc-icon">💡</div>
+                <h2 id="toggle-acc-name">Accessory Name</h2>
+            </div>
+            <div class="modal-body">
+                <p id="toggle-acc-room" class="status-summary" style="text-align: center; margin-bottom: 25px;">Room</p>
+
+                <div class="interactive-controls">
+                    <div class="control-row">
+                        <span id="toggle-acc-status-text">Power</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-acc-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 10px;">
+                <button class="btn-secondary" style="flex: 1;" onclick="closeToggleAccessoryModal()">Cancel</button>
+                <button class="btn-primary" style="flex: 1;" onclick="applyAccessoryToggle()">Done</button>
             </div>
         </div>
     </div>

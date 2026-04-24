@@ -5,70 +5,80 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Controller class to manage all lights in the smart home.
- * Supports adding, removing, and toggling lights by room.
+ * Controller class to manage all accessories (Lights, Washing Machines, Doors, etc.).
+ * Renamed to AccessoryController conceptually but kept as LightController for compatibility.
  */
 public class LightController {
-    private List<Light> lights;
+    private List<Accessory> accessories;
 
     public LightController() {
-        this.lights = new ArrayList<>();
+        this.accessories = new ArrayList<>();
         
-        // Initialize with default lights to match the Apple Home feel
-        addLight("Living Room", "Main Chandelier");
-        addLight("Living Room", "TV Backlight");
-        addLight("Kitchen", "Ceiling Lights");
-        addLight("Kitchen", "Island Pendant");
-        addLight("Bedroom", "Bedside Lamp");
-        addLight("Bathroom", "Mirror Light");
-        addLight("Outside", "Porch Light");
+        // Initialize with default accessories to match the Apple Home feel
+        addAccessory("Light", "Living Room", "Main Chandelier");
+        addAccessory("Light", "Kitchen", "Ceiling Lights");
+        addAccessory("WashingMachine", "Laundry Room", "Washer");
+        addAccessory("Kitchen", "Kitchen", "Oven");
+        addAccessory("Door", "Front", "Main Door");
     }
 
-    // Add a new light
-    public Light addLight(String room, String name) {
-        Light newLight = new Light(room, name);
-        lights.add(newLight);
-        return newLight;
+    // Add a new accessory
+    public Accessory addAccessory(String type, String room, String name) {
+        Accessory newAcc = new Accessory(type, room, name);
+        accessories.add(newAcc);
+        return newAcc;
     }
 
-    // Remove a light by ID
-    public boolean removeLight(String id) {
-        return lights.removeIf(light -> light.getId().equals(id));
+    // Remove an accessory by ID
+    public boolean removeAccessory(String id) {
+        return accessories.removeIf(acc -> acc.getId().equals(id));
     }
 
-    // Toggle a specific light by ID
-    public boolean toggleLight(String id, boolean state) {
-        for (Light light : lights) {
-            if (light.getId().equals(id)) {
-                light.setOn(state);
+    // Toggle a specific accessory by ID
+    public boolean toggleAccessory(String id, boolean state) {
+        for (Accessory acc : accessories) {
+            if (acc.getId().equals(id)) {
+                acc.setOn(state);
                 return true;
             }
         }
         return false;
     }
 
-    // Turn all lights in a specific room ON or OFF
-    public void setRoomLights(String room, boolean state) {
-        for (Light light : lights) {
-            if (light.getRoom().equalsIgnoreCase(room)) {
-                light.setOn(state);
+    // Toggle all accessories of a specific type (e.g. all Lights)
+    public void setAllOfType(String type, boolean state) {
+        for (Accessory acc : accessories) {
+            if (acc.getType().equalsIgnoreCase(type)) {
+                acc.setOn(state);
             }
         }
     }
 
-    // Turn ALL lights ON or OFF (Useful for state transitions like Night Mode or Away)
-    public void setAllLights(boolean state) {
-        for (Light light : lights) {
-            light.setOn(state);
+    // Turn all lights in a specific room ON or OFF
+    public void setRoomLights(String room, boolean state) {
+        for (Accessory acc : accessories) {
+            if (acc.getRoom().equalsIgnoreCase(room) && acc.getType().equalsIgnoreCase("Light")) {
+                acc.setOn(state);
+            }
         }
     }
 
-    // Get all lights grouped by room, formatting as a JSON array manually
-    public String getAllLightsAsJson() {
-        String lightsJson = lights.stream()
-            .map(Light::toJson)
+    // Turn ALL accessories ON or OFF (Careful with Doors!)
+    public void setAllLights(boolean state) {
+        setAllOfType("Light", state);
+    }
+
+    // Lock/Unlock specific doors
+    public void setDoorState(boolean locked) {
+        setAllOfType("Door", locked);
+    }
+
+    // Get all accessories grouped by room, formatting as a JSON array manually
+    public String getAllAccessoriesAsJson() {
+        String json = accessories.stream()
+            .map(Accessory::toJson)
             .collect(Collectors.joining(",\n    "));
             
-        return "[\n    " + lightsJson + "\n]";
+        return "[\n    " + json + "\n]";
     }
 }
