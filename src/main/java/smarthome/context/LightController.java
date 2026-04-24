@@ -17,7 +17,7 @@ public class LightController {
         // Initialize with default accessories to match the Apple Home feel
         addAccessory("Light", "Living Room", "Main Chandelier");
         addAccessory("Light", "Kitchen", "Ceiling Lights");
-        addAccessory("WashingMachine", "Laundry Room", "Washer");
+        addAccessory("WashingMachine", "Laundry Room", "Washing Machine");
         addAccessory("Kitchen", "Kitchen", "Oven");
         addAccessory("Door", "Front", "Main Door");
     }

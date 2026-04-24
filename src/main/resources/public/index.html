@@ -65,19 +65,14 @@
                         <input type="range" id="thermostat-slider" min="15" max="30" value="22" oninput="document.getElementById('temp-value').innerText = this.value + '°C'">
                         <span id="temp-value" class="value-display">22°C</span>
                     </div>
-                    <div class="control-row">
-                        <span>💡 Main Lights</span>
-                        <label class="switch">
-                            <input type="checkbox" id="lights-toggle" checked>
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    <div class="control-row">
-                        <span>🔒 Doors</span>
-                        <label class="switch">
-                            <input type="checkbox" id="doors-toggle">
-                            <span class="slider round"></span>
-                        </label>
+                    <!-- Detailed lights and accessories selection -->
+                    <div class="control-row" style="flex-direction: column; align-items: stretch; border-bottom: none; padding-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; width: 100%;">
+                            <span style="font-weight: 600;">🔌 Customize Accessories for this Mode</span>
+                        </div>
+                        <div id="scene-lights-container" style="display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(128,128,128,0.2); border-radius: 10px; overflow: hidden; max-height: 200px; overflow-y: auto;">
+                            <!-- Populated dynamically by JS -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,9 +127,21 @@
                     <div class="control-row">
                         <span id="toggle-acc-status-text">Power</span>
                         <label class="switch">
-                            <input type="checkbox" id="toggle-acc-switch">
+                            <input type="checkbox" id="toggle-acc-switch" onchange="toggleWasherTimerOptions()">
                             <span class="slider round"></span>
                         </label>
+                    </div>
+
+                    <!-- Timer options, only visible if WashingMachine and turned ON -->
+                    <div id="washer-timer-container" class="control-row" style="display: none; border-top: 1px solid rgba(128, 128, 128, 0.1);">
+                        <span>⏱️ Timer (Minutes)</span>
+                        <input type="range" id="washer-timer-slider" min="15" max="120" step="15" value="45" oninput="document.getElementById('washer-timer-value').innerText = this.value + 'm'">
+                        <span id="washer-timer-value" class="value-display">45m</span>
+                    </div>
+
+                    <!-- Countdown display -->
+                    <div id="washer-countdown-container" class="control-row" style="display: none; border-top: 1px solid rgba(128, 128, 128, 0.1); justify-content: center;">
+                        <span style="color: var(--blue); font-weight: bold;">Time remaining: <span id="washer-countdown-display">00:00</span></span>
                     </div>
                 </div>
             </div>
