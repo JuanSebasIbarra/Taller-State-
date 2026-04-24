@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Home - Smart Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>My Home</h1>
+            <p id="current-status-text" class="status-summary">Fetching status...</p>
+        </header>
+
+        <section class="scenes-section">
+            <h2>Scenes</h2>
+            <div class="grid">
+                <div class="card scene-card" id="card-home" onclick="activateMode('setHome', 'Home')">
+                    <div class="icon-wrapper bg-orange">🏡</div>
+                    <div class="card-title">Arrive Home</div>
+                </div>
+                <div class="card scene-card" id="card-away" onclick="activateMode('setAway', 'Away')">
+                    <div class="icon-wrapper bg-blue">🚶</div>
+                    <div class="card-title">Leave Home</div>
+                </div>
+                <div class="card scene-card" id="card-night" onclick="activateMode('setNight', 'Night')">
+                    <div class="icon-wrapper bg-indigo">🌙</div>
+                    <div class="card-title">Good Night</div>
+                </div>
+                <div class="card scene-card" id="card-vacation" onclick="activateMode('setVacation', 'Vacation')">
+                    <div class="icon-wrapper bg-green">✈️</div>
+                    <div class="card-title">Vacation</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New section for Lights -->
+        <section class="lights-section" style="margin-top: 40px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2>Accessories</h2>
+                <button class="add-btn" onclick="openAddLightModal()">+</button>
+            </div>
+
+            <!-- This container will be populated by JavaScript -->
+            <div id="lights-grid" class="grid accessories-grid">
+                <p class="status-summary">Loading accessories...</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- State Transition Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon" id="modal-icon">🏡</div>
+                <h2 id="modal-title">Arrive Home</h2>
+            </div>
+            <div class="modal-body">
+                <p id="modal-desc">The home is now set to your arrival settings.</p>
+
+                <div class="interactive-controls">
+                    <div class="control-row">
+                        <span>🌡️ Thermostat</span>
+                        <input type="range" id="thermostat-slider" min="15" max="30" value="22" oninput="document.getElementById('temp-value').innerText = this.value + '°C'">
+                        <span id="temp-value" class="value-display">22°C</span>
+                    </div>
+                    <div class="control-row">
+                        <span>💡 Main Lights</span>
+                        <label class="switch">
+                            <input type="checkbox" id="lights-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="control-row">
+                        <span>🔒 Doors</span>
+                        <label class="switch">
+                            <input type="checkbox" id="doors-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeModal()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Light Modal -->
+    <div id="add-light-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon">💡</div>
+                <h2>Add Accessory</h2>
+            </div>
+            <div class="modal-body">
+                <p class="status-summary" style="text-align: center; margin-bottom: 20px;">Add a new smart light to a room.</p>
+                <div class="form-group">
+                    <input type="text" id="new-light-room" placeholder="Room (e.g., Living Room)" class="input-field">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="new-light-name" placeholder="Name (e.g., Ceiling Light)" class="input-field">
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 10px;">
+                <button class="btn-secondary" style="flex: 1;" onclick="closeAddLightModal()">Cancel</button>
+                <button class="btn-primary" style="flex: 1;" onclick="submitNewLight()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
